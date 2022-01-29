@@ -29,9 +29,9 @@ const commands = [
         )
         .addStringOption((option) =>
           option
-            .setName('teams')
+            .setName('options')
             .setDescription(
-              'A semicolon-separated (;) list of teams. Starting a team with an emoji will set it as logo.'
+              'A semicolon-separated (;) list of things predictions will be made on (e.g. teams or players)'
             )
             .setRequired(true)
         )
@@ -39,7 +39,7 @@ const commands = [
           option
             .setName('questions')
             .setDescription(
-              'A semicolon-separated (;) list of questions. You will be prompted for details after.'
+              'A semicolon-separated (;) list of questions. You will be prompted for details'
             )
             .setRequired(true)
         )

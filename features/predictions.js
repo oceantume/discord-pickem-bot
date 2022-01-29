@@ -75,7 +75,7 @@ const makeQuestionStep = (pool, questionIndex) => {
       new MessageActionRow().addComponents(
         new MessageSelectMenu()
           .setCustomId(customId)
-          .setPlaceholder(`Select ${getAnswerRange(question)} team(s)`)
+          .setPlaceholder(`Select ${getAnswerRange(question)} option(s)`)
           .addOptions(teamOptions)
           .setMinValues(question.minValues || 1)
           .setMaxValues(question.maxValues || 1)

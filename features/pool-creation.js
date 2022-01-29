@@ -14,7 +14,7 @@ botClient.on('interactionCreate', async (interaction) => {
     interaction.options.getSubcommand() === 'create'
   ) {
     const name = interaction.options.getString('name').trim()
-    const teamsOption = interaction.options.getString('teams')
+    const teamsOption = interaction.options.getString('options')
     const questionsOption = interaction.options.getString('questions')
 
     const teams = teamsOption
@@ -140,7 +140,7 @@ const makeCreationConfirmation = (pool) => {
     "You are about to create a Pick'Em pool in this channel. Please confirm the details below.\n",
     `Name:`,
     `> ${pool.name}`,
-    `Teams:`,
+    `Options:`,
     `${pool.teams.map((team) => `> ${getTeamDisplayText(team)}`).join('\n')}`,
     `Questions:`,
     `${pool.questions
