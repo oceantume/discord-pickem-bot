@@ -1,4 +1,4 @@
-const { db, generateId } = require('./db')
+const { db } = require('./db')
 
 /*
 A prediction is a list of answers to a pool's questions, made by a specific user.
@@ -16,7 +16,7 @@ exports.getPrediction = async (poolId, userId) => {
 }
 
 exports.updatePrediction = async (poolId, userId, questionIndex, answer) => {
-  const prediction = await exports.getPrediction(poolId, userId)
+  let prediction = await exports.getPrediction(poolId, userId)
 
   if (!prediction) {
     prediction = {
