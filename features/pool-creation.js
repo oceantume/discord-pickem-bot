@@ -1,13 +1,9 @@
 const { SelectMenuComponent, SelectMenuOption } = require('@discordjs/builders')
 const { MessageButton, MessageActionRow } = require('discord.js')
+const emojiRegex = require('emoji-regex')
 const { botClient } = require('../bot-client')
-const {
-  getPool,
-  createPool,
-  updatePoolQuestion,
-  deletePool,
-} = require('../store/pools')
-const { parsePoolCustomId } = require('../utils')
+const { getPool, createPool, updatePoolQuestion } = require('../store/pools')
+const { parsePoolCustomId, getTeamDisplayText } = require('../utils')
 
 // Creation handler
 botClient.on('interactionCreate', async (interaction) => {
@@ -24,7 +20,7 @@ botClient.on('interactionCreate', async (interaction) => {
     const teams = teamsOption
       .split(';')
       .filter((str) => str)
-      .map((str) => ({ name: str.trim() }))
+      .map(extractTeamFromString)
     const questions = questionsOption
       .split(';')
       .filter((str) => str)
@@ -92,6 +88,30 @@ botClient.on('interactionCreate', async (interaction) => {
   }
 })
 
+// match a string that starts with a unicode emoji or a discord emoji code `<:name:id>`
+const teamWithEmojiRegex = new RegExp(
+  `(?:(${emojiRegex().source})|<:([a-zA-Z0-9_]{2,}):(\\d+)>)(.+)`
+)
+
+const extractTeamFromString = (str) => {
+  const match = str.match(teamWithEmojiRegex)
+
+  if (!match) {
+    return { name: str.trim() }
+  }
+
+  const [, unicodeEmoji, name, id, teamName] = match
+
+  let emoji
+  if (unicodeEmoji) {
+    emoji = { name: unicodeEmoji }
+  } else if (name && id) {
+    emoji = { name, id }
+  }
+
+  return { emoji, name: teamName.trim() }
+}
+
 const makeQuestionSetupStep = (pool, questionIndex) => {
   const question = pool.questions[questionIndex]
 
@@ -121,7 +141,7 @@ const makeCreationConfirmation = (pool) => {
     `Name:`,
     `> ${pool.name}`,
     `Teams:`,
-    `${pool.teams.map((team) => `> ${team.name}`).join('\n')}`,
+    `${pool.teams.map((team) => `> ${getTeamDisplayText(team)}`).join('\n')}`,
     `Questions:`,
     `${pool.questions
       .map(

@@ -13,3 +13,16 @@ exports.parsePoolCustomId = (customId) => {
 
   return { poolId, action, params }
 }
+
+exports.getTeamDisplayText = (team) => {
+  if (!team.emoji) {
+    return team.name
+  }
+
+  const { name, id } = team.emoji
+  if (name && id) {
+    return `<:${name}:${id}> ${team.name}`
+  }
+
+  return `${name} ${team.name}`
+}
