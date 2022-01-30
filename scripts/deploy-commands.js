@@ -1,22 +1,42 @@
+// This script deploys the commands to a specific discord guild (server).
+// Permissions will be set according to environment values:
+//  - ADMIN_ROLE_ID: comma-separated list of role id's that can use management commands
+//  - ADMIN_USER_ID: comma-separated list of user id's that can use management commands
+//
+
 require('dotenv').config()
 
 const { SlashCommandBuilder } = require('@discordjs/builders')
 const { REST } = require('@discordjs/rest')
 const { Routes } = require('discord-api-types/v9')
 
-// This deploys the commands to a specific discord guild (server).
-// TODO: Replace this with automatic command installation when bot is added to a server.
-
 const {
   CLIENT_ID: clientId,
   GUILD_ID: guildId,
   DISCORD_TOKEN: token,
+  ADMIN_ROLE_ID: adminRoleIds = '',
+  ADMIN_USER_ID: adminUserIds = '',
 } = process.env
+
+const roles = adminRoleIds
+  .split(',')
+  .map((id) => id.trim())
+  .filter((id) => !!id)
+
+const users = adminUserIds
+  .split(',')
+  .map((id) => id.trim())
+  .filter((id) => !!id)
+
+const hasUsersOrRoles = roles.length + users.length > 0
+
+const rest = new REST({ version: '9' }).setToken(token)
 
 const commands = [
   new SlashCommandBuilder()
     .setName('pickem')
     .setDescription('Run a PickEm command')
+    .setDefaultPermission(!hasUsersOrRoles)
     .addSubcommand((subcommand) =>
       subcommand
         .setName('create')
@@ -49,9 +69,24 @@ const commands = [
     ),
 ].map((command) => command.toJSON())
 
-const rest = new REST({ version: '9' }).setToken(token)
-
 rest
   .put(Routes.applicationGuildCommands(clientId, guildId), { body: commands })
-  .then(() => console.log('Successfully registered application commands.'))
+  .then((commands) => {
+    const permissions = [
+      ...roles.map((id) => ({ id, type: 1, permission: true })),
+      ...users.map((id) => ({ id, type: 2, permission: true })),
+    ]
+
+    const commandsPermissions = commands.map(({ id }) => ({ id, permissions }))
+
+    rest
+      .put(Routes.guildApplicationCommandsPermissions(clientId, guildId), {
+        body: commandsPermissions,
+      })
+      .then(() => {
+        console.log(
+          'Successfully registered application commands and permissions.'
+        )
+      })
+  })
   .catch(console.error)
