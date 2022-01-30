@@ -43,6 +43,9 @@ const commands = [
             )
             .setRequired(true)
         )
+    )
+    .addSubcommand((subcommand) =>
+      subcommand.setName('lock').setDescription('Locks a pool in this channel')
     ),
 ].map((command) => command.toJSON())
 

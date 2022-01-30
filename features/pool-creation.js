@@ -2,7 +2,13 @@ const { SelectMenuComponent, SelectMenuOption } = require('@discordjs/builders')
 const { MessageButton, MessageActionRow } = require('discord.js')
 const emojiRegex = require('emoji-regex')
 const { botClient } = require('../bot-client')
-const { getPool, createPool, updatePoolQuestion } = require('../store/pools')
+const {
+  getPool,
+  createPool,
+  updatePoolQuestion,
+  activatePool,
+  updatePoolMessage,
+} = require('../store/pools')
 const { parsePoolCustomId, getTeamDisplayText } = require('../utils')
 
 // Creation handler
@@ -77,10 +83,14 @@ botClient.on('interactionCreate', async (interaction) => {
 
   // Handler for pool start
   if (interaction.isButton() && action === 'start') {
+    await activatePool(interaction.guildId, poolId)
     const pool = await getPool(interaction.guildId, poolId)
 
     try {
-      await interaction.channel.send(makePoolMessage(pool))
+      const message = await interaction.channel.send(
+        exports.makePoolMessage(pool)
+      )
+      await updatePoolMessage(interaction.guildId, poolId, message.id)
       await interaction.update(makeStartConfirmation(pool))
     } catch (e) {
       await interaction.update(makeBotError(e.message))
@@ -185,12 +195,18 @@ const makeStartConfirmation = (pool) => {
   }
 }
 
-const makePoolMessage = (pool) => ({
-  content: `**${pool.name}**\nUse the menu below to enter, change or view your predictions.`,
+exports.makePoolMessage = (pool) => ({
+  content: [
+    `**${pool.name}**`,
+    pool.status === 'locked'
+      ? `This pool is now locked and predictions cannot be changed.`
+      : `Use the menu below to enter, change or view your predictions.`,
+  ].join('\n'),
   components: [
     new MessageActionRow().addComponents(
       new MessageButton()
         .setCustomId(`pool:${pool.id}:answer`)
+        .setDisabled(pool.status === 'locked')
         .setLabel('Enter your predictions')
         .setStyle('PRIMARY'),
       new MessageButton()
