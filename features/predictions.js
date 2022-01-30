@@ -2,7 +2,7 @@ const { MessageActionRow, MessageSelectMenu } = require('discord.js')
 const { botClient } = require('../bot-client')
 const { updatePrediction, getPrediction } = require('../store/predictions')
 const { getPool } = require('../store/pools')
-const { parsePoolCustomId } = require('../utils')
+const { parsePoolCustomId, getTeamDisplayText } = require('../utils')
 
 botClient.on('interactionCreate', async (interaction) => {
   if (!interaction.isMessageComponent()) {
@@ -56,9 +56,9 @@ botClient.on('interactionCreate', async (interaction) => {
 })
 
 const makeQuestionStep = (pool, questionIndex) => {
-  const teamOptions = pool.teams.map((team) => ({
+  const teamOptions = pool.teams.map((team, index) => ({
     label: team.name,
-    value: team.name,
+    value: `${index}`,
     emoji: team.emoji,
   }))
 
@@ -101,7 +101,12 @@ const makeEmptyAnswersView = () => {
 
 const makePredictionSummary = (pool, prediction) => {
   const summary = pool.questions
-    .map((question, index) => ({ question, answer: prediction.answers[index] }))
+    .map((question, index) => ({
+      question,
+      answer: prediction.answers[index].map((teamIndex) =>
+        getTeamDisplayText(pool.teams[teamIndex])
+      ),
+    }))
     .map(
       ({ question, answer }, index) =>
         `${index + 1}. ${question.description}\n${answer
