@@ -28,7 +28,7 @@ botClient.on('interactionCreate', async (interaction) => {
 
     // TODO: Validations and errors for name, non-empty teams, non-empty questions
 
-    const pool = await createPool({
+    const pool = await createPool(interaction.guildId, {
       name,
       teams,
       questions,
@@ -49,7 +49,7 @@ botClient.on('interactionCreate', async (interaction) => {
 
   // Handler for question setup responses
   if (interaction.isSelectMenu() && action === 'setup-question') {
-    let pool = await getPool(poolId)
+    let pool = await getPool(interaction.guildId, poolId)
 
     const questionIndex = Number(params[0])
     const question = pool.questions[questionIndex]
@@ -58,13 +58,13 @@ botClient.on('interactionCreate', async (interaction) => {
 
     const selectedValue = Number(interaction.values[0])
 
-    await updatePoolQuestion(poolId, questionIndex, {
+    await updatePoolQuestion(interaction.guildId, poolId, questionIndex, {
       ...question,
       minValues: selectedValue,
       maxValues: selectedValue,
     })
 
-    pool = await getPool(poolId)
+    pool = await getPool(interaction.guildId, poolId)
 
     if (nextQuestionIndex < pool.questions.length) {
       await interaction.update(makeQuestionSetupStep(pool, nextQuestionIndex))
@@ -77,7 +77,7 @@ botClient.on('interactionCreate', async (interaction) => {
 
   // Handler for pool start
   if (interaction.isButton() && action === 'start') {
-    const pool = await getPool(poolId)
+    const pool = await getPool(interaction.guildId, poolId)
 
     try {
       await interaction.channel.send(makePoolMessage(pool))

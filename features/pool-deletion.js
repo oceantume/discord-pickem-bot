@@ -19,8 +19,8 @@ botClient.on('interactionCreate', async (interaction) => {
 
   // Handler for pool cancel/deletion
   if (interaction.isButton() && action === 'delete') {
-    const pool = await getPool(poolId)
-    await deletePool(poolId)
+    const pool = await getPool(interaction.guildId, poolId)
+    await deletePool(interaction.guildId, poolId)
     await interaction.update(makeDeletionConfirmation(pool))
   }
 })

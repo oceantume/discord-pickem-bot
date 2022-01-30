@@ -18,7 +18,7 @@ botClient.on('interactionCreate', async (interaction) => {
   const { poolId, action, params } = parsedCustomId
 
   if (action === 'view') {
-    const pool = await getPool(poolId)
+    const pool = await getPool(interaction.guildId, poolId)
     const prediction = await getPrediction(poolId, interaction.user.id)
 
     if (prediction) {
@@ -29,7 +29,7 @@ botClient.on('interactionCreate', async (interaction) => {
   }
 
   if (action === 'answer') {
-    const pool = await getPool(poolId)
+    const pool = await getPool(interaction.guildId, poolId)
 
     const questionIndex = params[0] && Number(params[0])
 
