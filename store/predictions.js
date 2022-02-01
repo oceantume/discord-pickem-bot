@@ -44,3 +44,15 @@ exports.getPoolPredictions = async (poolId) => {
   }
   return result
 }
+
+exports.getPoolPredictions = async function* (poolId) {
+  const itr = db.iterator({
+    gt: `prediction:${poolId}:`,
+    lte: `prediction:${poolId}:~`,
+    keys: false,
+  })
+
+  for await (const [, value] of itr) {
+    yield JSON.parse(value)
+  }
+}

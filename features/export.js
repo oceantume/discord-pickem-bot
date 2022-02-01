@@ -65,13 +65,11 @@ botClient.on('interactionCreate', async (interaction) => {
 /**
  * Sends a direct message to the specified user containing a CSV file
  * with all predictions and some details on how to parse it.
- * 
+ *
  * Questions with multiple answers will be split in the amount
  * of columns necessary to output all answers.
  */
 const exportPool = async (pool, userId) => {
-  const predictions = await getPoolPredictions(pool.id)
-
   const stream = new Stream.PassThrough({ defaultEncoding: 'utf8' })
 
   // start sending the message. the file will be streamed to it.
@@ -85,7 +83,10 @@ const exportPool = async (pool, userId) => {
   })
 
   writeColumnHeaders(stream, pool)
-  await writeValueCells(stream, pool, predictions)
+
+  for await (const prediction of getPoolPredictions(pool.id)) {
+    await writeValueCells(stream, pool, prediction)
+  }
 
   stream.end()
 
@@ -107,15 +108,13 @@ const getColumnNamesFromQuestion = (questions) =>
         )
   )
 
-const writeValueCells = async (stream, pool, predictions) => {
-  for (const { userId, answers } of predictions) {
-    const cells = [
-      await fetchUsername(userId),
-      ...getValueCellsFromAnswers(pool.questions, answers),
-    ]
+const writeValueCells = async (stream, pool, { userId, answers }) => {
+  const cells = [
+    await fetchUsername(userId),
+    ...getValueCellsFromAnswers(pool.questions, answers),
+  ]
 
-    stream.write(`${cells.join(',')}\n`)
-  }
+  stream.write(`${cells.join(',')}\n`)
 }
 
 const getValueCellsFromAnswers = (questions, answers) =>
