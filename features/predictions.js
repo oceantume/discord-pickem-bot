@@ -189,7 +189,7 @@ const makePredictionSharedSummary = (pool, prediction) => {
   const summary = getPredictionSummaryText(pool, prediction)
 
   return {
-    content: `Sharing predictions of <@${prediction.userId}>.\n\n${summary}`,
+    content: `**${pool.name}**\nSharing predictions of <@${prediction.userId}>.\n\n${summary}`,
     components: [],
   }
 }
