@@ -72,9 +72,33 @@ botClient.on('interactionCreate', async (interaction) => {
 const exportPool = async (pool, userId) => {
   const stream = new Stream.PassThrough({ defaultEncoding: 'utf8' })
 
+  const questionsInfo = pool.questions
+    .map(({ description }, index) => `question${index + 1}: ${description}`)
+    .join('\n')
+
+  const teamsInfo = pool.teams
+    .map((team, index) => `${index + 1}: ${team.name}`)
+    .join('\n')
+
   // start sending the message. the file will be streamed to it.
   const messagePromise = botClient.users.send(userId, {
-    content: "Here's your exported CSV.",
+    content: [
+      `Here are the predictions for **${pool.name}**.`,
+      'They have been exported as a CSV file so it can easily be imported into a spreadsheet.',
+      'Refer to the lists below to make sense of the column names and cell values.',
+      pool.status !== 'locked' &&
+        '\nNote that the pool is **not locked** which means users can still enter predictions.',
+      '\nQuestions:',
+      '```',
+      questionsInfo,
+      '```',
+      '\nAnswers:',
+      '```',
+      teamsInfo,
+      '```',
+    ]
+      .filter((line) => !!line)
+      .join('\n'),
     files: [
       new MessageAttachment()
         .setFile(stream, 'export.csv')
