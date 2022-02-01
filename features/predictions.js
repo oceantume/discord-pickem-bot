@@ -170,7 +170,7 @@ const makePredictionSummary = (pool, prediction, channelName) => {
   const summary = getPredictionSummaryText(pool, prediction)
 
   return {
-    ephemeral: false,
+    ephemeral: true,
     content: `You can review your predictions below. You can always change them until the pool gets locked by an admin.\n\n${summary}`,
     components: channelName
       ? [
