@@ -39,7 +39,7 @@ exports.updatePredictionSharedAt = async (poolId, userId, sharedAt) => {
   }
 
   prediction.sharedAt = sharedAt
-  
+
   await db.put(`prediction:${poolId}:${userId}`, JSON.stringify(prediction))
 }
 

@@ -164,7 +164,7 @@ const makePoolIsNotActiveError = () => ({
   ephemeral: true,
   content: 'This pool is not active.',
   components: [],
-}) 
+})
 
 const makePredictionSummary = (pool, prediction, channelName) => {
   const summary = getPredictionSummaryText(pool, prediction)

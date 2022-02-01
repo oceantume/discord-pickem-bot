@@ -1,6 +1,6 @@
 # Discord Pick'Em Bot
 
-A Pick'Em bot for Discord. This bot attempts to be as user-friendly as possible by using interactive components for most of its functions. 
+A Pick'Em bot for Discord. This bot attempts to be as user-friendly as possible by using interactive components for most of its functions.
 
 ## What's Pick'Em?
 
@@ -14,13 +14,14 @@ This was originally created for use in the [HLL Seasonal](https://hllseasonal.co
 
 The bot is still under development. Here are the current features available:
 
- - [x] Create a pool in a channel via `/pickem create <...>`
- - [x] Lock a previously created pool via `/pickem lock`
- - [x] Participate in an active pool by selecting and viewing your own predictions.
+- [x] Create a pool in a channel via `/pickem create <...>`
+- [x] Lock a previously created pool via `/pickem lock`
+- [x] Participate in an active pool by selecting and viewing your own predictions.
 
 Here are some of the planned features:
- - [ ] Delete a pool via a command
- - [ ] Export pool predictions via a command
+
+- [ ] Delete a pool via a command
+- [ ] Export pool predictions via a command
 
 ## Contributing
 
