@@ -31,6 +31,18 @@ exports.updatePrediction = async (poolId, userId, questionIndex, answer) => {
   await db.put(`prediction:${poolId}:${userId}`, JSON.stringify(prediction))
 }
 
+exports.updatePredictionSharedAt = async (poolId, userId, sharedAt) => {
+  let prediction = await exports.getPrediction(poolId, userId)
+
+  if (!prediction) {
+    return
+  }
+
+  prediction.sharedAt = sharedAt
+  
+  await db.put(`prediction:${poolId}:${userId}`, JSON.stringify(prediction))
+}
+
 exports.getPoolPredictions = async (poolId) => {
   const itr = db.iterator({
     gt: `prediction:${poolId}:`,

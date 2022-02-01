@@ -22,6 +22,7 @@ botClient.on('interactionCreate', async (interaction) => {
     const name = interaction.options.getString('name').trim()
     const teamsOption = interaction.options.getString('options')
     const questionsOption = interaction.options.getString('questions')
+    const shareChannel = interaction.options.getChannel('share-channel')
 
     const teams = teamsOption
       .split(';')
@@ -38,6 +39,7 @@ botClient.on('interactionCreate', async (interaction) => {
       name,
       teams,
       questions,
+      shareChannelId: shareChannel?.id ?? undefined,
       userId: interaction.user.id,
       channelId: interaction.channel.id,
     })

@@ -19,6 +19,7 @@ exports.createPool = async (guildId, poolInfo) => {
     name: poolInfo.name,
     userId: poolInfo.userId,
     channelId: poolInfo.channelId,
+    shareChannelId: poolInfo.shareChannelId,
     teams: poolInfo.teams,
     questions: poolInfo.questions,
   }

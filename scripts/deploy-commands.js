@@ -8,7 +8,7 @@ require('dotenv').config()
 
 const { SlashCommandBuilder } = require('@discordjs/builders')
 const { REST } = require('@discordjs/rest')
-const { Routes } = require('discord-api-types/v9')
+const { Routes, ChannelType } = require('discord-api-types/v9')
 
 const {
   CLIENT_ID: clientId,
@@ -62,6 +62,14 @@ const commands = [
               'A semicolon-separated (;) list of questions. You will be prompted for details'
             )
             .setRequired(true)
+        )
+        .addChannelOption((option) =>
+          option
+            .setName('share-channel')
+            .setDescription(
+              'An optional channel where users can share their predictions in'
+            )
+            .addChannelType(ChannelType.GuildText)
         )
     )
     .addSubcommand((subcommand) =>
