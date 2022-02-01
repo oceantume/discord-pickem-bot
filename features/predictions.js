@@ -43,7 +43,7 @@ botClient.on('interactionCreate', async (interaction) => {
       return
     }
 
-    const oneHour = 60 * 1000 * 1000
+    const oneHour = 60 * 60 * 1000
     const sharedAt = new Date(prediction.sharedAt)
     if (
       prediction.sharedAt &&
