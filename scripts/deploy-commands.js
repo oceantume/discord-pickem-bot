@@ -66,6 +66,11 @@ const commands = [
     )
     .addSubcommand((subcommand) =>
       subcommand.setName('lock').setDescription('Locks a pool in this channel')
+    )
+    .addSubcommand((subcommand) =>
+      subcommand
+        .setName('export')
+        .setDescription('Exports all answers of your pool')
     ),
 ].map((command) => command.toJSON())
 

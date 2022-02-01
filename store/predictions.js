@@ -20,6 +20,8 @@ exports.updatePrediction = async (poolId, userId, questionIndex, answer) => {
 
   if (!prediction) {
     prediction = {
+      poolId,
+      userId,
       answers: [],
     }
   }
@@ -27,4 +29,18 @@ exports.updatePrediction = async (poolId, userId, questionIndex, answer) => {
   prediction.answers[questionIndex] = answer
 
   await db.put(`prediction:${poolId}:${userId}`, JSON.stringify(prediction))
+}
+
+exports.getPoolPredictions = async (poolId) => {
+  const itr = db.iterator({
+    gt: `prediction:${poolId}:`,
+    lte: `prediction:${poolId}:~`,
+    keys: false,
+  })
+
+  const result = []
+  for await (const [, value] of itr) {
+    result.push(JSON.parse(value))
+  }
+  return result
 }
