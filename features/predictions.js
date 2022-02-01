@@ -67,6 +67,11 @@ botClient.on('interactionCreate', async (interaction) => {
     const questionIndex = params[0] && Number(params[0])
 
     if (questionIndex != null) {
+      if (pool.status !== 'active') {
+        await interaction.reply(makePoolIsNotActiveError())
+        return
+      }
+
       await updatePrediction(
         poolId,
         interaction.user.id,
@@ -154,6 +159,12 @@ const makeSharedConfirmation = (pool) => {
     components: [],
   }
 }
+
+const makePoolIsNotActiveError = () => ({
+  ephemeral: true,
+  content: 'This pool is not active.',
+  components: [],
+}) 
 
 const makePredictionSummary = (pool, prediction, channelName) => {
   const summary = getPredictionSummaryText(pool, prediction)
