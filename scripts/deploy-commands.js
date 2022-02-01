@@ -13,7 +13,7 @@ const { Routes, ChannelType } = require('discord-api-types/v9')
 const {
   CLIENT_ID: clientId,
   GUILD_ID: guildId,
-  DISCORD_TOKEN: token,
+  BOT_TOKEN: token,
   ADMIN_ROLE_ID: adminRoleIds = '',
   ADMIN_USER_ID: adminUserIds = '',
 } = process.env

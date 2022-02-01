@@ -12,5 +12,5 @@ botClient.once('ready', (client) => {
   console.log('Bot client is ready!')
 })
 
-const { DISCORD_TOKEN: token } = process.env
+const { BOT_TOKEN: token } = process.env
 botClient.login(token)
