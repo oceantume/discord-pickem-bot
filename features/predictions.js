@@ -198,14 +198,14 @@ const getPredictionSummaryText = (pool, prediction) =>
   pool.questions
     .map((question, index) => ({
       question,
-      answer: prediction.answers[index].map((teamIndex) =>
+      answer: prediction.answers[index]?.map((teamIndex) =>
         getTeamDisplayText(pool.teams[teamIndex])
       ),
     }))
     .map(
       ({ question, answer }, index) =>
-        `${index + 1}. ${question.description}\n${answer
-          .map((value) => `> ${value}`)
-          .join('\n')}`
+        `${index + 1}. ${question.description}\n${
+          answer?.map((value) => `> ${value}`).join('\n') ?? `> [no answer]`
+        }`
     )
     .join('\n\n')
