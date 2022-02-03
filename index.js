@@ -1,5 +1,7 @@
 require('dotenv').config()
 
+require('./utils/sentry')
+
 require('./features/pool-creation')
 require('./features/pool-deletion')
 require('./features/pool-locking')
