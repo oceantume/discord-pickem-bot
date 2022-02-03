@@ -8,7 +8,6 @@ const { Stream } = require('stream')
 const { botClient } = require('../bot-client')
 const { getPoolsInChannel, getPool } = require('../store/pools')
 const { getPoolPredictions } = require('../store/predictions')
-const { parsePoolCustomId } = require('../utils')
 
 // Creation handler
 botClient.on('interactionCreate', async (interaction) => {
@@ -29,7 +28,9 @@ botClient.on('interactionCreate', async (interaction) => {
     }
 
     if (pools.length === 1) {
-      await interaction.reply(makePoolExported(pool))
+      await interaction.deferReply({ ephemeral: true })
+      await exportPool(pools[0], interaction.user.id)
+      await interaction.editReply(makePoolExported(pools[0]))
       return
     } else {
       await interaction.reply(makePoolSelection(pools))
@@ -40,24 +41,9 @@ botClient.on('interactionCreate', async (interaction) => {
   if (interaction.isSelectMenu() && interaction.customId === 'export') {
     const poolId = interaction.values[0]
     const pool = await getPool(interaction.guildId, poolId)
+    await interaction.deferReply({ ephemeral: true })
     await exportPool(pool, interaction.user.id)
-    await interaction.update(makePoolExported(pool))
-    return
-  }
-
-  const parsedCustomId = parsePoolCustomId(interaction.customId)
-
-  if (!parsedCustomId) {
-    return
-  }
-
-  const { poolId, action, params } = parsedCustomId
-
-  if (action === 'export') {
-    await lockPool(interaction.guildId, poolId)
-    const pool = await getPool(interaction.guildId, poolId)
-    await exportPool(pool, interaction.userId)
-    await interaction.update(makePoolExported(pool))
+    await interaction.editReply(makePoolExported(pool))
     return
   }
 })
