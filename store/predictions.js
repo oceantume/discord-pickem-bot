@@ -43,20 +43,6 @@ exports.updatePredictionSharedAt = async (poolId, userId, sharedAt) => {
   await db.put(`prediction:${poolId}:${userId}`, JSON.stringify(prediction))
 }
 
-exports.getPoolPredictions = async (poolId) => {
-  const itr = db.iterator({
-    gt: `prediction:${poolId}:`,
-    lte: `prediction:${poolId}:~`,
-    keys: false,
-  })
-
-  const result = []
-  for await (const [, value] of itr) {
-    result.push(JSON.parse(value))
-  }
-  return result
-}
-
 exports.getPoolPredictions = async function* (poolId) {
   const itr = db.iterator({
     gt: `prediction:${poolId}:`,
