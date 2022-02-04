@@ -130,7 +130,7 @@ const writeValueCells = async (stream, pool, { userId, answers }) => {
 const getValueCellsFromAnswers = (questions, answers) =>
   questions.flatMap((question, questionIndex) =>
     Array.from({ length: question.maxValues }, (_, i) =>
-      getAnswerCell(answers[questionIndex][i])
+      getAnswerCell(answers[questionIndex]?.[i])
     )
   )
 
