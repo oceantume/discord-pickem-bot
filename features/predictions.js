@@ -53,12 +53,14 @@ botClient.on('interactionCreate', async (interaction) => {
       return
     }
 
+    await interaction.deferReply({ ephemeral: true })
+
     await updatePredictionSharedAt(poolId, interaction.user.id, new Date())
 
     const channel = await botClient.channels.fetch(pool.shareChannelId)
     await channel.send(makePredictionSharedSummary(pool, prediction))
 
-    interaction.reply(makeSharedConfirmation(pool))
+    await interaction.editReply(makeSharedConfirmation(pool))
   }
 
   if (action === 'answer') {

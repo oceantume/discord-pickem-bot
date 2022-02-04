@@ -52,13 +52,14 @@ botClient.on('interactionCreate', async (interaction) => {
   const { poolId, action, params } = parsedCustomId
 
   if (action === 'lock') {
+    await interaction.deferUpdate()
     await lockPool(interaction.guildId, poolId)
     const pool = await getPool(interaction.guildId, poolId)
     await interaction.channel.messages.edit(
       pool.messageId,
       makePoolMessage(pool)
     )
-    await interaction.update(makeLockedConfirmation(pool))
+    await interaction.editReply(makeLockedConfirmation(pool))
   }
 })
 

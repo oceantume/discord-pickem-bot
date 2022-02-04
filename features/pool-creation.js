@@ -85,6 +85,8 @@ botClient.on('interactionCreate', async (interaction) => {
 
   // Handler for pool start
   if (interaction.isButton() && action === 'start') {
+    await interaction.deferUpdate()
+
     await activatePool(interaction.guildId, poolId)
     const pool = await getPool(interaction.guildId, poolId)
 
@@ -92,10 +94,11 @@ botClient.on('interactionCreate', async (interaction) => {
       const message = await interaction.channel.send(
         exports.makePoolMessage(pool)
       )
+
       await updatePoolMessage(interaction.guildId, poolId, message.id)
-      await interaction.update(makeStartConfirmation(pool))
+      await interaction.editReply(makeStartConfirmation(pool))
     } catch (e) {
-      await interaction.update(makeBotError(e.message))
+      await interaction.editReply(makeBotError(e.message))
     }
   }
 })
