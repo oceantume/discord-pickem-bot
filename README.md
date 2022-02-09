@@ -31,6 +31,7 @@ Planned features:
 The bot is currently made in a way that it can only run for one guild at a time. The first step is to create your own developer application and bot in the [Discord developers portal](https://discord.com/developers/). Then, you should create a `.env` file using the information from `.env.example` to figure out which values are required. To get things like guild, user and role id's, you will have to enable Developer Mode under the Advanced settings of your discord client. This will allow you to right click items in the UI and see a "Copy ID" option.
 
 Here are the required permissions for the bot:
+
 - [ ] scopes: bot
 - [ ] scopes: applications.commands
 - [ ] bot: Send Message
@@ -49,4 +50,4 @@ You can also start the bot directly in node by running `node ./index.js` in a co
 
 ## Contributing
 
-If you want to contribute to this project, you should start by opening an issue. If you think you can resolve the issue, then you're welcome to create a pull request with the changes. Commit names should follow [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) and code files should be run through prettier.  
+If you want to contribute to this project, you should start by opening an issue. If you think you can resolve the issue, then you're welcome to create a pull request with the changes. Commit names should follow [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) and code files should be run through prettier.
