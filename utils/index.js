@@ -1,3 +1,5 @@
+const emojiRegex = require('emoji-regex')
+
 const customIdRegex =
   /^pool:([a-zA-Z0-9-]+):([a-zA-Z0-9-]+)((?::[a-zA-Z0-9-]+)*)$/
 
@@ -25,4 +27,28 @@ exports.getTeamDisplayText = (team) => {
   }
 
   return `${name} ${team.name}`
+}
+
+// match a string that starts with a unicode emoji or a discord emoji code `<:name:id>`
+const teamWithEmojiRegex = new RegExp(
+  `(?:(${emojiRegex().source})|<:([a-zA-Z0-9_]{2,}):(\\d+)>)(.+)`
+)
+
+exports.extractTeamFromString = (str) => {
+  const match = str.match(teamWithEmojiRegex)
+
+  if (!match) {
+    return { name: str.trim() }
+  }
+
+  const [, unicodeEmoji, name, id, teamName] = match
+
+  let emoji
+  if (unicodeEmoji) {
+    emoji = { name: unicodeEmoji }
+  } else if (name && id) {
+    emoji = { name, id }
+  }
+
+  return { emoji, name: teamName.trim() }
 }

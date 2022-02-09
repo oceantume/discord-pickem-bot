@@ -13,7 +13,7 @@ const { Routes, ChannelType } = require('discord-api-types/v9')
 const {
   CLIENT_ID: clientId,
   GUILD_ID: guildId,
-  BOT_TOKEN: token,
+  DISCORD_TOKEN: token,
   ADMIN_ROLE_ID: adminRoleIds = '',
   ADMIN_USER_ID: adminUserIds = '',
 } = process.env
@@ -29,8 +29,6 @@ const users = adminUserIds
   .filter((id) => !!id)
 
 const hasUsersOrRoles = roles.length + users.length > 0
-
-const rest = new REST({ version: '9' }).setToken(token)
 
 const commands = [
   new SlashCommandBuilder()
@@ -79,8 +77,30 @@ const commands = [
       subcommand
         .setName('export')
         .setDescription('Exports all answers of your pool')
+    )
+    .addSubcommand((subcommand) =>
+      subcommand
+        .setName('rename-option')
+        .setDescription(
+          'Renames the option of a pool. You will be prompted for confirmation'
+        )
+        /*.addIntegerOption((option) =>
+          option
+            .setName('id')
+            .setDescription(
+              'The id of the option. This can be found when exporting it'
+            )
+        )*/
+        .addStringOption((option) =>
+          option
+            .setName('name')
+            .setDescription('The new name for the option')
+            .setRequired(true)
+        )
     ),
 ].map((command) => command.toJSON())
+
+const rest = new REST({ version: '9' }).setToken(token)
 
 rest
   .put(Routes.applicationGuildCommands(clientId, guildId), { body: commands })

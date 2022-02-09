@@ -7,6 +7,7 @@ require('./features/pool-deletion')
 require('./features/pool-locking')
 require('./features/predictions')
 require('./features/export')
+require('./features/option-rename')
 
 const { botClient } = require('./bot-client')
 

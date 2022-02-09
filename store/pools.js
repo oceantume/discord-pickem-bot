@@ -93,3 +93,14 @@ exports.updatePoolMessage = async (guildId, poolId, messageId) => {
   pool.messageId = messageId
   await exports.updatePool(guildId, poolId, pool)
 }
+
+exports.updatePoolTeam = async (guildId, poolId, teamIndex, team) => {
+  const pool = await exports.getPool(guildId, poolId)
+  if (teamIndex < 0 || teamIndex >= pool.teams.length) {
+    throw new Error(
+      `Invalid teamIndex ${teamIndex}. Pool currently has ${pool.teams.length} teams.`
+    )
+  }
+  pool.teams[teamIndex] = team
+  await exports.updatePool(guildId, poolId, pool)
+}
